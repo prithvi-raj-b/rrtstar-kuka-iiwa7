@@ -1,8 +1,6 @@
 #!/usr/bin/env python3
 
-import rospy
 import numpy as np
-from trajectory_msgs.msg import JointTrajectory, JointTrajectoryPoint
 from kuka_sim import kukaSimulator
 
 class node:
@@ -52,10 +50,20 @@ class RRTStar:
         return np.linalg.norm(q - self.goal.q) < self.goal_radius
     
     def rewire(self, new_node, radius):
-        for i,node in enumerate(self.nodes) :
+
+        nearestRadiusNodes = [ i for i,x in enumerate(self.nodes) if np.linalg.norm(x.q - new_node.q) < radius]
+        for i in nearestRadiusNodes:
+            node = self.nodes[i]
             if np.linalg.norm(node.q - new_node.q) < radius and node.cost + np.linalg.norm(node.q - new_node.q) < new_node.cost :
                 new_node.parent = i
                 new_node.cost = node.cost + np.linalg.norm(node.q - new_node.q)
+        
+        for i in nearestRadiusNodes:
+            node = self.nodes[i]
+            if np.linalg.norm(node.q - new_node.q) < radius and new_node.cost + np.linalg.norm(node.q - new_node.q) < node.cost :
+                node.parent = len(self.nodes)
+                node.cost = new_node.cost + np.linalg.norm(node.q - new_node.q)
+
     
     def run(self):
         

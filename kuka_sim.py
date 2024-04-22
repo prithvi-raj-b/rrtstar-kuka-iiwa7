@@ -83,7 +83,7 @@ class kukaSimulator:
 
 
 def main():
-    K = kukaSimulator()
+    K = kukaSimulator([0,0,0,0,0,0,0])
     K.collisionCheck([0, 1.7, 0, -1.0, 0, 0, 1])
     input()
 
