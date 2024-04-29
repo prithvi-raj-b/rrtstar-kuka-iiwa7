@@ -2,7 +2,7 @@ import pybullet as pyb
 import pybullet_data
 import pyb_utils
 from time import sleep
-import quaternion as quat
+#import quaternion as quat
 
 TIMESTEP = 1.0 / 60
 
@@ -45,14 +45,20 @@ class kukaSimulator:
         robot = pyb_utils.Robot(kuka_id, client_id=client_id)
 
         # some cubes for obstacles
+        # cube1_id = pyb.loadURDF(
+        #     "/home/prithvi/bulletSim/obstacles/humanoid.urdf", [0.5, -0.3, 0.6], [0.5, -0.5, 0.5, 0.5], useFixedBase=True, physicsClientId=client_id
+        # )
         cube1_id = pyb.loadURDF(
-            "/home/prithvi/bulletSim/obstacles/humanoid.urdf", [0.5, -0.3, 0.6], [0.5, -0.5, 0.5, 0.5], useFixedBase=True, physicsClientId=client_id
+            "obstacles/humanoid.urdf", [0.5, -0.3, 0.6], [0.5, -0.5, 0.5, 0.5], useFixedBase=True, physicsClientId=client_id
         )
         # cube1_id = pyb.loadSoftBody(
         #     "/home/prithvi/bulletSim/obstacles/FinalBaseMesh.obj", physicsClientId=client_id
         # )
+        # cube2_id = pyb.loadURDF(
+        #     "/home/prithvi/bulletSim/obstacles/table/table.urdf", [0.7, 0.2, -0.1],[0,0,0.7068, 0.7073], useFixedBase=True, physicsClientId=client_id
+        # )
         cube2_id = pyb.loadURDF(
-            "/home/prithvi/bulletSim/obstacles/table/table.urdf", [0.7, 0.2, -0.1],[0,0,0.7068, 0.7073], useFixedBase=True, physicsClientId=client_id
+            "obstacles/table/table.urdf", [0.7, 0.2, -0.1],[0,0,0.7068, 0.7073], useFixedBase=True, physicsClientId=client_id
         )
         # cube3_id = pyb.loadURDF(
         #     "cube.urdf", [1, -1, 0.5], useFixedBase=True, physicsClientId=client_id
