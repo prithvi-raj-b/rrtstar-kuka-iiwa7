@@ -48,7 +48,7 @@ class kukaSimulator:
         # cube1_id = pyb.loadURDF(
         #     "/home/prithvi/bulletSim/obstacles/humanoid.urdf", [0.5, -0.3, 0.6], [0.5, -0.5, 0.5, 0.5], useFixedBase=True, physicsClientId=client_id
         # )
-        cube1_id = pyb.loadURDF(
+        human_id = pyb.loadURDF(
             "obstacles/humanoid.urdf", [0.5, -0.3, 0.6], [0.5, -0.5, 0.5, 0.5], useFixedBase=True, physicsClientId=client_id
         )
         # cube1_id = pyb.loadSoftBody(
@@ -67,7 +67,7 @@ class kukaSimulator:
         # store body indices in a dict with more convenient key names
         obstacles = {
             "ground": ground_id,
-            "cube1": cube1_id,
+            "cube1": human_id,
             # "cube2": cube2_id,
             # "cube3": cube3_id,
         }
