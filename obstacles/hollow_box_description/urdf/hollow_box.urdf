@@ -1,0 +1,32 @@
+<?xml version="1.0" ?>
+<robot name="hollow_box">
+
+<material name="silver_default">
+  <color rgba="0.700 0.700 0.700 1.000"/>
+</material>
+<material name="phenolic_amber">
+  <color rgba="1.0 1.0 1.0 1.0"/>
+</material>
+
+<link name="base_link">
+  <inertial>
+    <origin xyz="0.3499999999999989 0.1497081184058309 -0.15000000000000047" rpy="0 0 0"/>
+    <mass value="6.846431881681406"/>
+    <inertia ixx="0.181348" iyy="0.463693" izz="0.4634" ixy="-0.0" iyz="-0.0" ixz="-0.0"/>
+  </inertial>
+  <visual>
+    <origin xyz="0 0 0" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="obstacles/hollow_box_description/meshes/base_link.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+    <material name="phenolic_amber"/>
+  </visual>
+  <collision>
+    <origin xyz="0 0 0" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="obstacles/hollow_box_description/meshes/base_link.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+  </collision>
+</link>
+
+</robot>

@@ -53,7 +53,7 @@ class kukaSimulator:
         #     "/home/prithvi/bulletSim/obstacles/humanoid.urdf", [0.5, -0.3, 0.6], [0.5, -0.5, 0.5, 0.5], useFixedBase=True, physicsClientId=client_id
         # )
         human_id = pyb.loadURDF(
-            "obstacles/humanoid.urdf", [0.5, -0.3, 0.6], [0.5, -0.5, 0.5, 0.5], useFixedBase=True, physicsClientId=client_id
+            "obstacles/hollow_box_description/urdf/hollow_box.urdf", [0.5, -0.3, 0.5], [0.5, 0.5, 0.5, 0.5], useFixedBase=True, physicsClientId=client_id
         )
         # cube1_id = pyb.loadSoftBody(
         #     "/home/prithvi/bulletSim/obstacles/FinalBaseMesh.obj", physicsClientId=client_id
