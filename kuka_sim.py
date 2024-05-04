@@ -10,6 +10,10 @@ class kukaSimulator:
     def __init__(self, start_state, margin=0.01):
         self.col_id = pyb.connect(pyb.DIRECT)
         self.gui_id = pyb.connect(pyb.GUI)
+        # pyb.setRealTimeSimulation(1, physicsClientId=self.col_id)
+        # pyb.setRealTimeSimulation(1, physicsClientId=self.gui_id)
+        pyb.resetDebugVisualizerCamera(1.8, 2.0, 0, [0.2, -0.2, 0.7], physicsClientId=self.gui_id)
+
         self.robot, self.obstacles = self.load_environment(self.col_id)
         self.visual_bot, _ = self.load_environment(self.gui_id)
         self.visual_bot.reset_joint_configuration(start_state)
@@ -68,8 +72,38 @@ class kukaSimulator:
 
         return robot,obstacles
 
-    def collisionCheck(self, q):
-        self.robot.reset_joint_configuration(q)
+    def collisionCheck(self, q_start):
+        self.robot.reset_joint_configuration(q_start)
+        
+        # pyb.setJointMotorControlArray(
+        #     self.robot.uid,
+        #     self.robot._moveable_joint_indices,
+        #     pyb.POSITION_CONTROL,
+        #     targetPositions=q_end,
+        #     targetVelocities=[0.2] * 7,
+        #     # maxVelocities=[0.5] * 7,
+        #     forces=[500] * 7,
+        #     positionGains=[kp] * len(self.robot._moveable_joint_indices),
+        #     velocityGains=[kd] * len(self.robot._moveable_joint_indices),
+        #     physicsClientId=self.col_id,
+        # )
+        
+        # self.visual_bot.reset_joint_configuration(q_start)
+        # pyb.setJointMotorControlArray(
+        #     self.visual_bot.uid,
+        #     self.visual_bot._moveable_joint_indices,
+        #     pyb.POSITION_CONTROL,
+        #     targetPositions=q_end,
+        #     targetVelocities=[0.2] * 7,
+        #     # maxVelocities=[0.5] * 7,
+        #     forces=[500] * 7,
+        #     positionGains=[kp] * len(self.robot._moveable_joint_indices),
+        #     velocityGains=[kd] * len(self.robot._moveable_joint_indices),
+        #     physicsClientId=self.gui_id,
+        # )
+        # pyb.stepSimulation(physicsClientId=self.col_id)
+        # pyb.stepSimulation(physicsClientId=self.gui_id)
+
         if not self.col_detector.in_collision(margin=self.margin):
             return False
         else:

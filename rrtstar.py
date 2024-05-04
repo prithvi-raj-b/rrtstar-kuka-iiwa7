@@ -55,12 +55,16 @@ class RRTStar:
         for i in nearestRadiusNodes:
             node = self.nodes[i]
             if np.linalg.norm(node.q - new_node.q) < radius and node.cost + np.linalg.norm(node.q - new_node.q) < new_node.cost :
+                # if self.collision_check(new_node.q) :
+                #     continue
                 new_node.parent = i
                 new_node.cost = node.cost + np.linalg.norm(node.q - new_node.q)
         
         for i in nearestRadiusNodes:
             node = self.nodes[i]
             if np.linalg.norm(node.q - new_node.q) < radius and new_node.cost + np.linalg.norm(node.q - new_node.q) < node.cost :
+                # if self.collision_check(new_node.q, node.q) :
+                #     continue
                 node.parent = len(self.nodes)
                 node.cost = new_node.cost + np.linalg.norm(node.q - new_node.q)
 
