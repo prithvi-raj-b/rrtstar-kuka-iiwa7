@@ -1,10 +1,10 @@
-#!/usr/bin/env python3
+
 
 import numpy as np
 from kuka_sim import kukaSimulator
 import roboticstoolbox as rtb
 
-# Define the DH parameters for KUKA iiwa7 
+# Define the DH parameters for KUKA iiwa7
 robot = rtb.DHRobot([
     rtb.RevoluteDH(d=0.34, a=0, alpha=-np.pi/2, offset=0),
     rtb.RevoluteDH(d=0, a=0, alpha=np.pi/2, offset=0),
@@ -12,7 +12,8 @@ robot = rtb.DHRobot([
     rtb.RevoluteDH(d=0, a=0, alpha=-np.pi/2, offset=0),
     rtb.RevoluteDH(d=0.4, a=0, alpha=-np.pi/2, offset=0),
     rtb.RevoluteDH(d=0, a=0, alpha=np.pi/2, offset=0),
-    rtb.RevoluteDH(d=0.126, a=0, alpha=0, offset=0)
+    rtb.RevoluteDH(d=0.126, a=0, alpha=0, offset=0),
+    rtb.RevoluteDH(d=0.2, a=0, alpha=0, offset=0)
 ])
 
 class node:
@@ -55,20 +56,65 @@ class RRTStar:
             return q2
         return q1 + self.step_size * (q2 - q1) / mag
     
-    def FK(self, q):
+    def point_on_line(self, p1, p2, pcheck):
+        
+        if np.linalg.norm(np.cross(p1-pcheck,p2-pcheck) == 0) :
+            lamda = np.dot(pcheck-p1,p2-p1)/np.dot(p2-p1,p2-p1)
+
+            if(lamda>=0 and lamda<=1) :
+                return True, lamda
+        
+        return False, None
+    
+    def FK(q):
         # Finding coordinates of each joint in the base frame
         n = len(q)
-        poses = np.zeros((n, 3))
+        qupd = np.zeros(n+1)
         for i in range(n):
-            poses[i][0] = float(robot.A(i, q).t[0])
-            poses[i][1] = float(robot.A(i, q).t[1])
-            poses[i][2] = float(robot.A(i, q).t[2])
+            qupd[i] = q[i]
+
+        poses = np.zeros((n+1, 3))
+        for i in range(n+1):
+            poses[i][0] = robot.A(i, qupd).t[0]
+            poses[i][1] = robot.A(i, qupd).t[1]
+            poses[i][2] = robot.A(i, qupd).t[2]
 
         return poses
     
-    def rcm(self, q):
-        # Enabling rcm constraint
+    def rcm(self, q, q_old):
         
+        pentr= np.array([0.0, 0.0, 0.0]) # Entry point of the needle
+        normal = np.array([0.0, 0.0, 1.0]) # Normal to the plane of the surface
+        
+        p7_old = np.array(self.FK(q_old)[6])
+        p8_old = np.array(self.FK(q_old)[7])
+
+        p7 = np.array(self.FK(q)[6])
+        p8 = np.array(self.FK(q)[7])
+
+        vec_old = p8_old - p7_old
+        vec = p8 - p7
+
+        lamda_old = self.point_on_line(p7_old, p8_old, pentr)
+        lamda = self.point_on_line(p7, p8, pentr)
+
+        if lamda_old[0] == False or lamda[0] == False :
+            return False
+        else:
+            lamda_old = lamda_old[1]
+            lamda = lamda[1]
+
+            if np.linalg.norm(np.cross(vec_old,normal))==0 and np.linalg.norm(np.cross(vec,normal))==0 :
+                return True
+            elif np.linalg.norm(np.cross(vec_old,normal))==0 or np.linalg.norm(np.cross(vec,normal))!=0 :
+                if lamda_old == lamda :
+                    return True
+            elif np.linalg.norm(np.cross(vec_old,normal))!=0:
+                if lamda_old == lamda :
+                    return True
+                
+        return False
+
 
     def collision_check(self, q):
         return self.kuka_sim.collisionCheck(q)

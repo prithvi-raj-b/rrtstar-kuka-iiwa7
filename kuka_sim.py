@@ -2,6 +2,7 @@ import pybullet as pyb
 import pybullet_data
 import pyb_utils
 from time import sleep
+import numpy as np
 #import quaternion as quat
 
 TIMESTEP = 1.0 / 60
@@ -123,7 +124,7 @@ class kukaSimulator:
 
 
 def main():
-    K = kukaSimulator([0,0,0,0,0,0,0])
+    K = kukaSimulator([0,0,0,0,0,np.pi/2,0])
     K.collisionCheck([0, 1.7, 0, -1.0, 0, 0, 1])
     input()
 
