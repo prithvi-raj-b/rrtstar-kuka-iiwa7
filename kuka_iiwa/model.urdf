@@ -296,7 +296,7 @@
 
   <link name="needle">
    <inertial>
-     <origin rpy="0 0 0" xyz="0 0.05 -0.1"/>
+     <origin rpy="0 0 0" xyz="0 0 0"/>
      <mass value="1"/>
      <inertia ixx="100"  ixy="0"  ixz="0" iyy="100" iyz="0" izz="100" />
    </inertial>
@@ -313,7 +313,7 @@
    </visual>
 
    <collision>
-     <origin rpy="0 0 0" xyz="0 0.05 -0.1"/>
+     <origin rpy="0 0 0" xyz="0 0 0"/>
      <geometry>
        <cylinder radius="1" length="0.2"/>
      </geometry>
