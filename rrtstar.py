@@ -156,7 +156,7 @@ class RRTStar:
                 nearest_node = self.nodes[nnint]
 
                 new_q = self.move_step(nearest_node.q, q)
-                if self.collision_check(new_q) :
+                if self.collision_check(new_q):
                     continue
                 new_node = node(q=new_q, parent=nnint, cost=nearest_node.cost + np.linalg.norm(new_q - nearest_node.q))
                 
