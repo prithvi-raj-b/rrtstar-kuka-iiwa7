@@ -5,16 +5,6 @@ from kuka_sim import kukaSimulator
 import roboticstoolbox as rtb
 
 # Define the DH parameters for KUKA iiwa7
-robot = rtb.DHRobot([
-    rtb.RevoluteDH(d=0.34, a=0, alpha=-np.pi/2, offset=0),
-    rtb.RevoluteDH(d=0, a=0, alpha=np.pi/2, offset=0),
-    rtb.RevoluteDH(d=0.4, a=0, alpha=np.pi/2, offset=0),
-    rtb.RevoluteDH(d=0, a=0, alpha=-np.pi/2, offset=0),
-    rtb.RevoluteDH(d=0.4, a=0, alpha=-np.pi/2, offset=0),
-    rtb.RevoluteDH(d=0, a=0, alpha=np.pi/2, offset=0),
-    rtb.RevoluteDH(d=0.126, a=0, alpha=0, offset=0),
-    rtb.RevoluteDH(d=0.2, a=0, alpha=0, offset=0)
-])
 
 class node:
     def __init__(self, q=None, parent=None, cost=0) :
@@ -36,6 +26,17 @@ class RRTStar:
         self.nodes = [self.start]
         self.rewire_radius = rewire_radius
         self.kuka_sim = kukaSimulator(start_state=start)
+
+        self.robot = rtb.DHRobot([
+            rtb.RevoluteDH(d=0.34, a=0, alpha=-np.pi/2, offset=0),
+            rtb.RevoluteDH(d=0, a=0, alpha=np.pi/2, offset=0),
+            rtb.RevoluteDH(d=0.4, a=0, alpha=np.pi/2, offset=0),
+            rtb.RevoluteDH(d=0, a=0, alpha=-np.pi/2, offset=0),
+            rtb.RevoluteDH(d=0.4, a=0, alpha=-np.pi/2, offset=0),
+            rtb.RevoluteDH(d=0, a=0, alpha=np.pi/2, offset=0),
+            rtb.RevoluteDH(d=0.126, a=0, alpha=0, offset=0),
+            rtb.RevoluteDH(d=0.2, a=0, alpha=0, offset=0)
+        ])
     
     def sample_point(self):
         return self.randgen.uniform(self.qmin, self.qmax)
@@ -66,7 +67,7 @@ class RRTStar:
         
         return False, None
     
-    def FK(q):
+    def FK(self,q):
         # Finding coordinates of each joint in the base frame
         n = len(q)
         qupd = np.zeros(n+1)
@@ -75,9 +76,9 @@ class RRTStar:
 
         poses = np.zeros((n+1, 3))
         for i in range(n+1):
-            poses[i][0] = robot.A(i, qupd).t[0]
-            poses[i][1] = robot.A(i, qupd).t[1]
-            poses[i][2] = robot.A(i, qupd).t[2]
+            poses[i][0] = self.robot.A(i, qupd).t[0]
+            poses[i][1] = self.robot.A(i, qupd).t[1]
+            poses[i][2] = self.robot.A(i, qupd).t[2]
 
         return poses
     
