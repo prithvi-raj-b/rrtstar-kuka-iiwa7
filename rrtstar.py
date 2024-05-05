@@ -83,7 +83,7 @@ class RRTStar:
     
     def rcm(self, q, q_old):
         
-        pentr= np.array([0.0, 0.0, 0.0]) # Entry point of the needle
+        pentr= np.array([0.35,0,0.8]) # Entry point of the needle
         normal = np.array([0.0, 0.0, 1.0]) # Normal to the plane of the surface
         
         p7_old = np.array(self.FK(q_old)[6])
