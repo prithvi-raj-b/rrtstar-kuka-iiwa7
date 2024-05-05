@@ -2,6 +2,18 @@
 
 import numpy as np
 from kuka_sim import kukaSimulator
+import roboticstoolbox as rtb
+
+# Define the DH parameters for KUKA iiwa7 
+robot = rtb.DHRobot([
+    rtb.RevoluteDH(d=0.34, a=0, alpha=-np.pi/2, offset=0),
+    rtb.RevoluteDH(d=0, a=0, alpha=np.pi/2, offset=0),
+    rtb.RevoluteDH(d=0.4, a=0, alpha=np.pi/2, offset=0),
+    rtb.RevoluteDH(d=0, a=0, alpha=-np.pi/2, offset=0),
+    rtb.RevoluteDH(d=0.4, a=0, alpha=-np.pi/2, offset=0),
+    rtb.RevoluteDH(d=0, a=0, alpha=np.pi/2, offset=0),
+    rtb.RevoluteDH(d=0.126, a=0, alpha=0, offset=0)
+])
 
 class node:
     def __init__(self, q=None, parent=None, cost=0) :
@@ -36,12 +48,27 @@ class RRTStar:
                 min_dist = dist
                 min_index = i
         return min_index
-    
+        
     def move_step(self, q1, q2):
         mag = np.linalg.norm(q2 - q1)
         if(mag < self.step_size) :
             return q2
         return q1 + self.step_size * (q2 - q1) / mag
+    
+    def FK(self, q):
+        # Finding coordinates of each joint in the base frame
+        n = len(q)
+        poses = np.zeros((n, 3))
+        for i in range(n):
+            poses[i][0] = float(robot.A(i, q).t[0])
+            poses[i][1] = float(robot.A(i, q).t[1])
+            poses[i][2] = float(robot.A(i, q).t[2])
+
+        return poses
+    
+    def rcm(self, q):
+        # Enabling rcm constraint
+        
 
     def collision_check(self, q):
         return self.kuka_sim.collisionCheck(q)
