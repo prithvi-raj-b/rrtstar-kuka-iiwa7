@@ -37,21 +37,21 @@ def point_on_line(p1, p2, pcheck,r):
     vec = p2 - p1
 
     if vec[2]==0:
-        return False, None
+        return None
     
     lamda = (pcheck[2] - p1[2])/vec[2]
 
     if lamda < 0 or lamda > 1:
-        return False, None
+        return None
 
     #Find the point on the line
     p = p1 + lamda*vec
 
     #Check if the point is within the radius
     if np.linalg.norm(p-pcheck) < r:
-        return True, lamda
+        return lamda
     else:
-        return False, None
+        return None
 
 def rcm(q, q_old):
         
@@ -92,24 +92,27 @@ def rcm(q, q_old):
 def rcm2(q,qold):
      
         normal = np.array([0.0, 0.0, 1.0]) # Normal to the plane of the surface
-        prcm = np.array([0.35,0,0.8])
-        r = 0.025
+        prcm = np.array([0.55,0,0.8])
+        r = 0.1
 
         #Old path
-        p7_0 = np.array(FK(qold)[6])
-        p8_0 = np.array(FK(qold)[7])
+        qold = FK(qold)
+        p7_0 = np.array(qold[6])
+        p8_0 = np.array(qold[7])
 
-        lamda_0 = point_on_line(p7_0,p8_0,prcm,r)[1]
+        lamda_0 = point_on_line(p7_0,p8_0,prcm,r)
 
-        p7_1 = np.array(FK(q)[6])
-        p8_1 = np.array(FK(q)[7])
+        q = FK(q)
+        p7_1 = np.array(q[6])
+        p8_1 = np.array(q[7])
 
         #Check if rcm point is on the new path
-        if point_on_line(p7_1,p8_1,prcm,r)[0] == False:
+        lamda_1 = point_on_line(p7_1,p8_1,prcm,r)
+        if point_on_line(p7_1,p8_1,prcm,r) == None:
             return False
         
         #Calculate lamda
-        lamda_1 = point_on_line(p7_1,p8_1,prcm,r)[1]
+        
 
         #Case :1 Original line was along normal => New line is also along normal
         if np.linalg.norm(np.cross(p8_0-p7_0,normal))==0 and np.linalg.norm(np.cross(p8_1-p7_1,normal))==0 :
@@ -137,19 +140,19 @@ def rcm2(q,qold):
 
        
 path = []
-goal = np.array([-0.132, -0.198, 0.265, -1.19, -0.132, 1.587, 0])
+goal = np.array([0, 0.463, 0, -1.786, 0, 0.595, 0])
 path.append(goal)
 
 p7 = np.array(FK(goal)[6])
 p8 = np.array(FK(goal)[7])
-prcm = np.array([0.35,0,0.8])
+prcm = np.array([0.55,0,0.3])
 r = 0.1
 print(point_on_line(p7,p8,prcm,r))
 
 #Sample new p7
-for i in range(1, 1000):
+for i in range(1, 10000):
     #Sample new q
-    q = path[-1] + np.random.normal(0,0.1,7)
+    q = path[-1] + np.random.normal(0,0.01,7)
 
     if rcm2(q,path[-1]):
         path.append(q)
