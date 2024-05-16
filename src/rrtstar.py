@@ -214,9 +214,9 @@ class RRTStar:
 def main():
     
     start = np.array([1.455, -1.51, 1.25, 0, 0, 0, 0])
+    goal = np.array([-0.132, -0.198, 0.265, -1.19, -0.132, 1.587, 0])
     # start = np.array([0, 1.72, 0,0, 0, 0, 0])
     # goal = np.array([0, 0.066, 0.2, -1.257, -0.265, 1, 0.066])
-    goal = np.array([-0.132, -0.198, 0.265, -1.19, -0.132, 1.587, 0])
     goal_radius = 0.1
     step_size = 0.1
     max_iter = 500000
