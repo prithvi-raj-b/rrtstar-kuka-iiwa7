@@ -9,7 +9,7 @@ class RrtRcm(RrtBase):
         # r = 0.025
         RrtBase.__init__(self, start)
         del1 = np.array([0.025,0.025,0.1])
-        self.prcm = np.array([0.55, 0, 0.3])
+        self.prcm = np.array([0.55, 0, 0.2])
         self.qrcm = np.array([0, 0.463, 0, -1.786, 0, 0.595, 0, 0])
         self.qmin = self.prcm - del1
         self.qmax = self.prcm + del1
@@ -41,7 +41,7 @@ class RrtRcm(RrtBase):
     
     def IK(self, pose, old_pose):
         # T = self.robot.fkine(old_pose)
-        T = SE3(pose[0],pose[1],pose[2])*SE3.OA([0,1.0],[0,0,-1])
+        T = SE3(pose[0],pose[1],pose[2])*SE3.OA([0,1,0],[0,0,-1])
         q = self.robot.ikine_LM(T,self.qrcm)
         return q.q
     
