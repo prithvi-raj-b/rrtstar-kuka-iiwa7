@@ -55,7 +55,7 @@ class kukaSimulator:
         #     "/home/prithvi/bulletSim/obstacles/humanoid.urdf", [0.5, -0.3, 0.6], [0.5, -0.5, 0.5, 0.5], useFixedBase=True, physicsClientId=client_id
         # )
         human_id = pyb.loadURDF(
-            "obstacles/hollow_box_description/urdf/hollow_box.urdf", [0.5, -0.3, 0.5], [0.5, 0.5, 0.5, 0.5], useFixedBase=True, physicsClientId=client_id
+            "obstacles/hollow_box_description/urdf/hollow_box.urdf", [0.7, -0.3, 0.0], [0.5, 0.5, 0.5, 0.5], useFixedBase=True, physicsClientId=client_id
         )
         # cube1_id = pyb.loadSoftBody(
         #     "/home/prithvi/bulletSim/obstacles/FinalBaseMesh.obj", physicsClientId=client_id
@@ -63,9 +63,9 @@ class kukaSimulator:
         # cube2_id = pyb.loadURDF(
         #     "/home/prithvi/bulletSim/obstacles/table/table.urdf", [0.7, 0.2, -0.1],[0,0,0.7068, 0.7073], useFixedBase=True, physicsClientId=client_id
         # )
-        cube2_id = pyb.loadURDF(
-            "obstacles/table/table.urdf", [0.7, 0.2, -0.1],[0,0,0.7068, 0.7073], useFixedBase=True, physicsClientId=client_id
-        )
+        # cube2_id = pyb.loadURDF(
+        #     "obstacles/table/table.urdf", [0.7, 0.2, -0.1],[0,0,0.7068, 0.7073], useFixedBase=True, physicsClientId=client_id
+        # )
         # cube3_id = pyb.loadURDF(
         #     "cube.urdf", [1, -1, 0.5], useFixedBase=True, physicsClientId=client_id
         # )
