@@ -31,28 +31,27 @@ def FK(q):
 
     return poses
 
-def point_on_line(p1, p2, pcheck):
+def point_on_line(p1, p2, pcheck,r):
+
+    # Point of intersection of line and plane
+    vec = p2 - p1
+
+    if vec[2]==0:
+        return False, None
     
-        # Vector from p1 to p2
-        v = p2 - p1
-        # Vector from p1 to the point
-        w = pcheck - p1
+    lamda = (pcheck[2] - p1[2])/vec[2]
 
-        # Check if the point is on the line by checking the cross product
-        cross_product = np.cross(v, w)
-        if np.linalg.norm(cross_product) != 0:
-            return False
+    if lamda < 0 or lamda > 1:
+        return False, None
 
-        # Check if the point is within the bounds of the segment
-        dot_product = np.dot(w, v)
-        if dot_product < 0:
-            return False
+    #Find the point on the line
+    p = p1 + lamda*vec
 
-        squared_length_p0_p1 = np.dot(v, v)
-        if dot_product > squared_length_p0_p1:
-            return False
-
-        return True
+    #Check if the point is within the radius
+    if np.linalg.norm(p-pcheck) < r:
+        return True, lamda
+    else:
+        return False, None
 
 def rcm(q, q_old):
         
@@ -136,38 +135,45 @@ def rcm2(q,qold):
 
 
        
-path = []
-q_start = np.array([-0.132, -0.198, 0.265, -1.19, -0.132, 1.587, 0,0])
+# path = []
+# q_start = np.array([-0.132, -0.198, 0.265, -1.19, -0.132, 1.587, 0,0])
 
-#Target point
-rcm = [0.35,0,0.4]
-T = SE3(0.35,0,0.6) * SE3.OA([0, 1, 0], [0, 0, -1])
-# Do the inverse kinematics to find the joint angles
-q = robot.ikine_LM(T, q_start)
-q2 = np.array(q.q)
-q2 = q2[0:7]
-print(q2)
+# #Target point
+# rcm = [0.35,0,0.4]
+# T = SE3(0.35,0,0.6) * SE3.OA([0, 1, 0], [0, 0, -1])
+# # Do the inverse kinematics to find the joint angles
+# q = robot.ikine_LM(T, q_start)
+# q2 = np.array(q.q)
+# q2 = q2[0:7]
+# print(q2)
 
-path.append(q2)
+# path.append(q2)
 
-p7 = np.array(FK(q2)[6])
-p8 = np.array(FK(q2)[7])
-lamda = np.dot(rcm-p7,p8-p7)/np.dot(p8-p7,p8-p7)
-print(lamda)
+# p7 = np.array(FK(q2)[6])
+# p8 = np.array(FK(q2)[7])
+# lamda = np.dot(rcm-p7,p8-p7)/np.dot(p8-p7,p8-p7)
+# print(lamda)
 
-#Sample new p7
-for i in range(1, 1000):
-    p7_new = p7 + np.random.uniform(-0.01,0.01,3)
-    q_new = robot.ikine_LM(SE3(p7_new, T.R), q_start)
-
-
+# #Sample new p7
 # for i in range(1, 1000):
+#     p7_new = p7 + np.random.uniform(-0.01,0.01,3)
+#     q_new = robot.ikine_LM(SE3(p7_new, T.R), q_start)
+
+
+# # for i in range(1, 1000):
      
-#     #Sample new p7
+# #     #Sample new p7
     
 
-obj = kukaSimulator(start_state=q_start)
-obj.performTrajectory(path)
+# obj = kukaSimulator(start_state=q_start)
+# obj.performTrajectory(path)
+
+prcm = [0.35,0,0.8]
+p7 = np.array([0.35,0,1])
+p8 = np.array([0.35,0,0.6])
+r = 0.025
+
+print(point_on_line(p7,p8,prcm,r))
 
 
 
