@@ -122,12 +122,25 @@ def rcm2(q,qold):
             return True
         
         return False
-        
+
+# def rcm3(p7,p7_old):
+#      #Sampling p7 to simplify
+#     epsilon = 0.1
+#     prcm = np.array([0.5,0,0])
+
+#     #Sample p7_new around a semicircle with centre prcm,radius 0.2
+#     x = np.random.uniform(prcm[0]-0.1,prcm[0]+0.1)
+#     y = np.random.uniform(prcm[1]-0.1,prcm[1]+0.1)
+#     z = np.random.uniform(prcm[2],prcm[2]+0.1)
+#     p7= np.array([x,y,z])
+
+
+       
 path = []
 q_start = np.array([-0.132, -0.198, 0.265, -1.19, -0.132, 1.587, 0,0])
 
 #Target point
-tar = [0.35,0,0.4]
+rcm = [0.35,0,0.4]
 T = SE3(0.35,0,0.6) * SE3.OA([0, 1, 0], [0, 0, -1])
 # Do the inverse kinematics to find the joint angles
 q = robot.ikine_LM(T, q_start)
@@ -137,15 +150,21 @@ print(q2)
 
 path.append(q2)
 
+p7 = np.array(FK(q2)[6])
+p8 = np.array(FK(q2)[7])
+lamda = np.dot(rcm-p7,p8-p7)/np.dot(p8-p7,p8-p7)
+print(lamda)
+
+#Sample new p7
 for i in range(1, 1000):
+    p7_new = p7 + np.random.uniform(-0.01,0.01,3)
+    q_new = robot.ikine_LM(SE3(p7_new, T.R), q_start)
+
+
+# for i in range(1, 1000):
      
-    q = q2 + np.random.normal(0, 0.6, 7)
-    if rcm2(q,path[-1]):
-        path.append(q)
-        print("Valid RCM point found")
-        print(q)
-    else:
-        continue
+#     #Sample new p7
+    
 
 obj = kukaSimulator(start_state=q_start)
 obj.performTrajectory(path)
