@@ -92,23 +92,24 @@ def rcm(q, q_old):
 def rcm2(q,qold):
      
         normal = np.array([0.0, 0.0, 1.0]) # Normal to the plane of the surface
-        prcm = np.array([0.35,0,0.6])
+        prcm = np.array([0.35,0,0.8])
+        r = 0.025
 
         #Old path
         p7_0 = np.array(FK(qold)[6])
         p8_0 = np.array(FK(qold)[7])
 
-        lamda_0 = np.dot(prcm-p7_0,p8_0-p7_0)/np.dot(p8_0-p7_0,p8_0-p7_0) #Valid since prcm is on the line
+        lamda_0 = point_on_line(p7_0,p8_0,prcm,r)[1]
 
         p7_1 = np.array(FK(q)[6])
         p8_1 = np.array(FK(q)[7])
 
         #Check if rcm point is on the new path
-        if point_on_line(p7_1, p8_1, prcm) ==False:
+        if point_on_line(p7_1,p8_1,prcm,r)[0] == False:
             return False
         
         #Calculate lamda
-        lamda_1 = np.dot(prcm-p7_1,p8_1-p7_1)/np.dot(p8_1-p7_1,p8_1-p7_1)
+        lamda_1 = point_on_line(p7_1,p8_1,prcm,r)[1]
 
         #Case :1 Original line was along normal => New line is also along normal
         if np.linalg.norm(np.cross(p8_0-p7_0,normal))==0 and np.linalg.norm(np.cross(p8_1-p7_1,normal))==0 :
@@ -168,12 +169,7 @@ def rcm2(q,qold):
 # obj = kukaSimulator(start_state=q_start)
 # obj.performTrajectory(path)
 
-prcm = [0.35,0,0.8]
-p7 = np.array([0.35,0,1])
-p8 = np.array([0.35,0,0.6])
-r = 0.025
 
-print(point_on_line(p7,p8,prcm,r))
 
 
 
