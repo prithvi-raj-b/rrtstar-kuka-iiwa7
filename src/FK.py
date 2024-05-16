@@ -136,38 +136,27 @@ def rcm2(q,qold):
 
 
        
-# path = []
-# q_start = np.array([-0.132, -0.198, 0.265, -1.19, -0.132, 1.587, 0,0])
+path = []
+goal = np.array([-0.132, -0.198, 0.265, -1.19, -0.132, 1.587, 0])
+path.append(goal)
 
-# #Target point
-# rcm = [0.35,0,0.4]
-# T = SE3(0.35,0,0.6) * SE3.OA([0, 1, 0], [0, 0, -1])
-# # Do the inverse kinematics to find the joint angles
-# q = robot.ikine_LM(T, q_start)
-# q2 = np.array(q.q)
-# q2 = q2[0:7]
-# print(q2)
+p7 = np.array(FK(goal)[6])
+p8 = np.array(FK(goal)[7])
+prcm = np.array([0.35,0,0.8])
+r = 0.1
+print(point_on_line(p7,p8,prcm,r))
 
-# path.append(q2)
+#Sample new p7
+for i in range(1, 1000):
+    #Sample new q
+    q = path[-1] + np.random.normal(0,0.1,7)
 
-# p7 = np.array(FK(q2)[6])
-# p8 = np.array(FK(q2)[7])
-# lamda = np.dot(rcm-p7,p8-p7)/np.dot(p8-p7,p8-p7)
-# print(lamda)
+    if rcm2(q,path[-1]):
+        path.append(q)
+        print(q)
 
-# #Sample new p7
-# for i in range(1, 1000):
-#     p7_new = p7 + np.random.uniform(-0.01,0.01,3)
-#     q_new = robot.ikine_LM(SE3(p7_new, T.R), q_start)
-
-
-# # for i in range(1, 1000):
-     
-# #     #Sample new p7
-    
-
-# obj = kukaSimulator(start_state=q_start)
-# obj.performTrajectory(path)
+obj = kukaSimulator(start_state=goal)
+obj.performTrajectory(path)
 
 
 
