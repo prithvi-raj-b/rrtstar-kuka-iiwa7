@@ -104,7 +104,7 @@ def main():
     connect_radius = 0.1
     step_size = 0.1
     max_iter = 10000
-    rrt = Bidirectionalrrt(start, goal, connect_radius, step_size)
+    rrt = BidirectionalRrt(start, goal, connect_radius, step_size)
     if rrt.solve(max_iter):
         path = rrt.find_path()
         rrt.kuka_sim.performTrajectory(path)
