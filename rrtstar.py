@@ -58,14 +58,12 @@ class RRTStar:
         return q1 + self.step_size * (q2 - q1) / mag
     
     def point_on_line(self, p1, p2, pcheck):
-        
-        if np.linalg.norm(np.cross(p1-pcheck,p2-pcheck) == 0) :
-            lamda = np.dot(pcheck-p1,p2-p1)/np.dot(p2-p1,p2-p1)
-
-            if(lamda>=0 and lamda<=1) :
-                return True, lamda
-        
-        return False, None
+        vec = p2 - p1
+        veccheck = pcheck - p1
+        lamda = veccheck.dot(vec) / vec.dot(vec)
+        if lamda < 0 or lamda > 1 :
+            return False, None
+        return True, lamda
     
     def FK(self,q):
         # Finding coordinates of each joint in the base frame
@@ -84,14 +82,17 @@ class RRTStar:
     
     def rcm(self, q, q_old):
         
-        pentr= np.array([0.35,0,0.8]) # Entry point of the needle
+       
         normal = np.array([0.0, 0.0, 1.0]) # Normal to the plane of the surface
-        
+
         p7_old = np.array(self.FK(q_old)[6])
         p8_old = np.array(self.FK(q_old)[7])
 
         p7 = np.array(self.FK(q)[6])
         p8 = np.array(self.FK(q)[7])
+
+        epsilon = 0.4
+        pentr = p7_old + epsilon*(p8_old - p7_old)
 
         vec_old = p8_old - p7_old
         vec = p8 - p7
@@ -107,11 +108,11 @@ class RRTStar:
 
             if np.linalg.norm(np.cross(vec_old,normal))==0 and np.linalg.norm(np.cross(vec,normal))==0 :
                 return True
-            elif np.linalg.norm(np.cross(vec_old,normal))==0 or np.linalg.norm(np.cross(vec,normal))!=0 :
-                if lamda_old == lamda :
+            elif np.linalg.norm(np.cross(vec_old,normal))==0 and np.linalg.norm(np.cross(vec,normal))!=0 :
+                if abs(lamda - lamda_old) < 0.1 :
                     return True
             elif np.linalg.norm(np.cross(vec_old,normal))!=0:
-                if lamda_old == lamda :
+                if abs(lamda - lamda_old)<0.1 :
                     return True
                 
         return False
@@ -124,7 +125,6 @@ class RRTStar:
         return np.linalg.norm(q - self.goal.q) < self.goal_radius
     
     def rewire(self, new_node, radius):
-
         nearestRadiusNodes = [ i for i,x in enumerate(self.nodes) if np.linalg.norm(x.q - new_node.q) < radius]
         for i in nearestRadiusNodes:
             node = self.nodes[i]
@@ -236,6 +236,21 @@ def main():
     print(path, len(rrt.nodes))
     
     rrt.kuka_sim.performTrajectory(path)
+
+    # Demo for RCM
+    path2 = []
+    q_start = path[-1]
+    path2.append(q_start)
+    print("Starting RCM")
+    for i in range(100) :
+        q = np.random.uniform(q_start-0.1, q_start+0.1)
+        if rrt.rcm(q, q_start) :
+            print("RCM is possible")
+            path2.append(q)
+            break
+    
+    print(path2)
+    rrt.kuka_sim.performTrajectory(path2)
     input()
 
 if __name__ == '__main__':

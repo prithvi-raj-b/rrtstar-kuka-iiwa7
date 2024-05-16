@@ -21,7 +21,7 @@ class kukaSimulator:
 
         self.obstacles.values()
         self.links = [(self.robot.uid, f"lbr_iiwa_link_{x}") for x in range(1, 8)]
-        self.links = [(self.robot.uid,"needle")] + self.links
+        #self.links = [(self.robot.uid,"needle")] + self.links
 
         self.col_detector = pyb_utils.CollisionDetector(
             self.col_id,
