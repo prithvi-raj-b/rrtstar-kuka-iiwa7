@@ -1,6 +1,7 @@
 
 
 import numpy as np
+import time
 from kuka_sim import kukaSimulator
 import roboticstoolbox as rtb
 
@@ -145,10 +146,12 @@ class RRTStar:
     
     def run(self):
         
+        start = time.time()
+        
         for i in range(1,self.max_iter) :
             if i % 100 == 0 :
                 if self.goalBias()==True:
-                    return True
+                    return (time.time()-start, len(self.nodes))
             else:
                 q = self.sample_point()
 
@@ -168,9 +171,9 @@ class RRTStar:
                     self.goal.parent = len(self.nodes)-1
                     self.goal.cost = new_node.cost + np.linalg.norm(new_q - self.goal.q)
                     self.nodes.append(self.goal)
-                    return True
+                    return (time.time()-start, len(self.nodes))
         
-        return False
+        return (None, None)
     
     def goalBias(self):
         q = self.goal.q
@@ -213,18 +216,19 @@ class RRTStar:
 
 def main():
     
-    start = np.array([1.455, -1.51, 1.25, 0, 0, 0, 0])
-    goal = np.array([0, 0.463, 0, -1.786, 0, 0.595, 0])
-    # goal = np.array([-0.132, -0.198, 0.265, -1.19, -0.132, 1.587, 0])
+    # start = np.array([1.455, -1.51, 1.25, 0, 0, 0, 0])
+    start = np.array([0.5, 1.72, 0, 0, 0, 0, 0])
+    # goal = np.array([0, 0.463, 0, -1.786, 0, 0.595, 0])
+    goal = np.array([-0.132, -0.198, 0.265, -1.19, -0.132, 1.587, 0])
     # start = np.array([0, 1.72, 0,0, 0, 0, 0])
     # goal = np.array([0, 0.066, 0.2, -1.257, -0.265, 1, 0.066])
-    goal_radius = 0.1
-    step_size = 0.1
+    goal_radius = 0.2
+    step_size = 0.2
     max_iter = 500000
     rewire_radius = None
 
     rrt = RRTStar(start, goal, goal_radius, step_size, max_iter, rewire_radius)
-    rrt.run()
+    print(*rrt.run())
 
     path = []
     nint = -1
@@ -234,7 +238,7 @@ def main():
     
     path.reverse()
 
-    print(path, len(rrt.nodes))
+    # print(path, len(rrt.nodes))
     
     rrt.kuka_sim.performTrajectory(path)
 

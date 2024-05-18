@@ -33,9 +33,16 @@ def load_environment(client_id):
     robot = pyb_utils.Robot(kuka_id, client_id=client_id)
 
     # some cubes for obstacles
+    # cube1_id = pyb.loadURDF(
+    #     "obstacles/hollow_box_description/urdf/hollow_box.urdf", [0.7, -0.35, 0], [0.5, 0.5, 0.5, 0.5], useFixedBase=True, physicsClientId=client_id
+    # )
     cube1_id = pyb.loadURDF(
-        "obstacles/hollow_box_description/urdf/hollow_box.urdf", [0.7, -0.35, 0], [0.5, 0.5, 0.5, 0.5], useFixedBase=True, physicsClientId=client_id
+        "/home/prithvi/bulletSim/obstacles/humanoid.urdf", [0.8, -0.3, 0.6], [0.5, -0.5, 0.5, 0.5], useFixedBase=True, physicsClientId=client_id
     )
+    cube2_id = pyb.loadURDF(
+        "/home/prithvi/bulletSim/obstacles/table/table.urdf", [1.0, 0.2, -0.1],[0,0,0.7068, 0.7073], useFixedBase=True, physicsClientId=client_id
+    )
+
     # cube2_id = pyb.loadURDF(
     #     "cube.urdf", [-1, -1, 0.5], useFixedBase=True, physicsClientId=client_id
     # )
@@ -50,7 +57,7 @@ def load_environment(client_id):
     obstacles = {
         "ground": ground_id,
         "cube1": cube1_id,
-        # "cube2": cube2_id,
+        "cube2": cube2_id,
         # "cube3": cube3_id,
     }
     return robot, obstacles
@@ -109,13 +116,13 @@ def main():
     # collision checking
     ground = col_obstacles["ground"]
     cube1 = col_obstacles["cube1"]
-    # cube2 = col_obstacles["cube2"]
+    cube2 = col_obstacles["cube2"]
     # cube3 = col_obstacles["cube3"]
     link7 = (col_robot.uid, "lbr_iiwa_link_7")
 
     col_detector = pyb_utils.CollisionDetector(
         col_id,
-        [(link7, ground), (link7, cube1),],
+        [(link7, ground), (link7, cube1), (link7, cube2)],
     )
 
     last_dists = 0

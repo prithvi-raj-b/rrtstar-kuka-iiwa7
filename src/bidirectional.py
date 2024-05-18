@@ -1,4 +1,5 @@
 import numpy as np
+import time
 from rrt_util import RrtBase, node
 
 class BidirectionalRrt(RrtBase):
@@ -68,14 +69,17 @@ class BidirectionalRrt(RrtBase):
         self.agent2 = self.agent(self, goal, connect_radius, step_size)
     
     def solve(self, max_iter):
+        start = time.time()
         for i in range(1, max_iter):
             new_q = self.agent1.extend()
             if len(new_q) != 0 and self.agent2.connect(new_q):
-                return True
+                time_taken = time.time() - start
+                return (time_taken, len(self.agent1.nodes) + len(self.agent2.nodes))
             new_q = self.agent2.extend()
             if len(new_q) != 0  and self.agent1.connect(new_q):
-                return True
-        return False
+                time_taken = time.time() - start
+                return (time_taken, len(self.agent1.nodes) + len(self.agent2.nodes))
+        return None,None
     
     def find_path(self):
         x = len(self.agent1.nodes)-1
@@ -99,18 +103,23 @@ class BidirectionalRrt(RrtBase):
     
 
 def main():
-    start = np.array([1.455, -1.51, 1.25, 0, 0, 0, 0])
-    goal = np.array([0, 0.463, 0, -1.786, 0, 0.595, 0])
-    # goal = np.array([-0.132, -0.198, 0.265, -1.19, -0.132, 1.587, 0])
+    # start = np.array([1.455, -1.51, 1.25, 0, 0, 0, 0])
+    start = np.array([1.0, 1.72, 0, 0, 0, 0, 0])
+    # goal = np.array([0, 0.463, 0, -1.786, 0, 0.595, 0])
+    goal = np.array([-0.132, -0.198, 0.265, -1.19, -0.132, 1.587, 0])
 
-    connect_radius = 0.1
-    step_size = 0.1
+    connect_radius = 0.2
+    step_size = 0.2
     max_iter = 10000
     rrt = BidirectionalRrt(start, goal, connect_radius, step_size)
-    if rrt.solve(max_iter):
+
+    time_taken, num_nodes = rrt.solve(max_iter)
+    if num_nodes != None:
         path = rrt.find_path()
         rrt.kuka_sim.performTrajectory(path)
         print(path)
+        print("Time taken: ", time_taken)
+        print("Number of nodes: ", num_nodes)
     else:
         print("No path found")
 
