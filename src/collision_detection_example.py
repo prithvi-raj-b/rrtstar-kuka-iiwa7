@@ -37,10 +37,10 @@ def load_environment(client_id):
     #     "obstacles/hollow_box_description/urdf/hollow_box.urdf", [0.7, -0.35, 0], [0.5, 0.5, 0.5, 0.5], useFixedBase=True, physicsClientId=client_id
     # )
     cube1_id = pyb.loadURDF(
-        "/home/prithvi/bulletSim/obstacles/humanoid.urdf", [0.8, -0.3, 0.6], [0.5, -0.5, 0.5, 0.5], useFixedBase=True, physicsClientId=client_id
+        "obstacles/humanoid.urdf", [0.8, -0.3, 0.6], [0.5, -0.5, 0.5, 0.5], useFixedBase=True, physicsClientId=client_id
     )
     cube2_id = pyb.loadURDF(
-        "/home/prithvi/bulletSim/obstacles/table/table.urdf", [1.0, 0.2, -0.1],[0,0,0.7068, 0.7073], useFixedBase=True, physicsClientId=client_id
+        "obstacles/table/table.urdf", [1.0, 0.2, -0.1],[0,0,0.7068, 0.7073], useFixedBase=True, physicsClientId=client_id
     )
 
     # cube2_id = pyb.loadURDF(
