@@ -4,5 +4,8 @@
 - PyBullet
 - Robotics toolbox
 
+# Done by:
+- Akhil Bandamidapalli (ME20B016)
+- Prithviraj B (ME20B137)
 
 
