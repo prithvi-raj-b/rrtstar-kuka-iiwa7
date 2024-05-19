@@ -2,7 +2,7 @@
 
 Prerequisites:
 - PyBullet
-- Robotics toolbox
+- Robotics toolbox [![Powered by the Robotics Toolbox](https://raw.githubusercontent.com/petercorke/robotics-toolbox-python/master/.github/svg/rtb_powered.min.svg)](https://github.com/petercorke/robotics-toolbox-python)
 
   All algorithms may be found in the src folder
 
