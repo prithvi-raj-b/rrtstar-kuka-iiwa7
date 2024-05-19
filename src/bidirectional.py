@@ -54,10 +54,11 @@ class BidirectionalRrt(RrtBase):
             return np.argmin((np.linalg.norm(node.q - q) for node in self.nodes))
         
         def move_step(self, q1, q2):
-            if(np.linalg.norm(q1 - q2) < self.step_size):
+            mag = np.linalg.norm(q1 - q2)
+            if(mag < self.step_size):
                 return q2
             else:
-                return q1 + self.step_size * (q2 - q1) / np.linalg.norm(q2 - q1)
+                return q1 + self.step_size * (q2 - q1) / mag
         
         def sample_point(self):
             return self.randgen.uniform(self.qmin, self.qmax)
@@ -108,14 +109,16 @@ def main():
     # goal = np.array([0, 0.463, 0, -1.786, 0, 0.595, 0])
     goal = np.array([-0.132, -0.198, 0.265, -1.19, -0.132, 1.587, 0])
 
-    connect_radius = 0.2
-    step_size = 0.2
-    max_iter = 10000
+    connect_radius = 0.3
+    step_size = 0.3
+    max_iter = 100000
     rrt = BidirectionalRrt(start, goal, connect_radius, step_size)
 
     time_taken, num_nodes = rrt.solve(max_iter)
     if num_nodes != None:
         path = rrt.find_path()
+        eff_pathlen = np.sum(np.linalg.norm(path[i] - path[i+1]) for i in range(len(path)-1))
+        print("End-Effector Path Length: ", eff_pathlen)
         rrt.kuka_sim.performTrajectory(path)
         print(path)
         print("Time taken: ", time_taken)
