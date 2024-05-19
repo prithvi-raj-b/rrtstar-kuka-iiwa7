@@ -2,7 +2,7 @@
 
 # Prerequisites:
 - PyBullet
-- Python
-- Uninstall confirmation of Coppeliasim
+- Robotics toolbox
+
 
 
