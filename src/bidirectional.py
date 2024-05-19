@@ -105,12 +105,12 @@ class BidirectionalRrt(RrtBase):
 
 def main():
     # start = np.array([1.455, -1.51, 1.25, 0, 0, 0, 0])
-    start = np.array([1.0, 1.72, 0, 0, 0, 0, 0])
+    start = np.array([0.7, 1.72, 0, 0, 0, 0, 0])
     # goal = np.array([0, 0.463, 0, -1.786, 0, 0.595, 0])
     goal = np.array([-0.132, -0.198, 0.265, -1.19, -0.132, 1.587, 0])
 
-    connect_radius = 0.3
-    step_size = 0.3
+    connect_radius = 0.2
+    step_size = 0.2
     max_iter = 100000
     rrt = BidirectionalRrt(start, goal, connect_radius, step_size)
 
@@ -119,10 +119,12 @@ def main():
         path = rrt.find_path()
         eff_pathlen = np.sum(np.linalg.norm(path[i] - path[i+1]) for i in range(len(path)-1))
         print("End-Effector Path Length: ", eff_pathlen)
-        rrt.kuka_sim.performTrajectory(path)
+        # rrt.kuka_sim.performTrajectory(path)
         print(path)
         print("Time taken: ", time_taken)
         print("Number of nodes: ", num_nodes)
+        with open("data2.csv", "a") as f:
+            f.write(f"b,{time_taken},{num_nodes},{eff_pathlen}\n")
     else:
         print("No path found")
 

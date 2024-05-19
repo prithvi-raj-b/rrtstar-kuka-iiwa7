@@ -224,11 +224,11 @@ def main():
     # goal = np.array([0, 0.066, 0.2, -1.257, -0.265, 1, 0.066])
     goal_radius = 0.2
     step_size = 0.2
-    max_iter = 500000
+    max_iter = 50000
     rewire_radius = 0.2
 
     rrt = RRTStar(start, goal, goal_radius, step_size, max_iter, rewire_radius)
-    print(*rrt.run())
+    time_taken, num_nodes = rrt.run()
 
     path = []
     eff_path = []
@@ -240,27 +240,30 @@ def main():
     
     eff_pathlen = np.sum(np.linalg.norm(eff_path[i] - eff_path[i+1]) for i in range(len(eff_path)-1))
     print("End-Effector Path Length: ", eff_pathlen)
+    with open("data2.csv", "a") as f:
+        line_char = "r" if rewire_radius==None else "s"
+        f.write(f"{line_char},{time_taken},{num_nodes},{eff_pathlen}\n")
     path.reverse()
 
     # print(path, len(rrt.nodes))
     
-    rrt.kuka_sim.performTrajectory(path)
+    # rrt.kuka_sim.performTrajectory(path)
 
     # Demo for RCM
-    path2 = []
-    q_start = path[-1]
-    path2.append(q_start)
-    print("Starting RCM")
-    for i in range(100) :
-        q = np.random.uniform(q_start-0.1, q_start+0.1)
-        if rrt.rcm(q, q_start) :
-            print("RCM is possible")
-            path2.append(q)
-            break
+    # path2 = []
+    # q_start = path[-1]
+    # path2.append(q_start)
+    # print("Starting RCM")
+    # for i in range(100) :
+    #     q = np.random.uniform(q_start-0.1, q_start+0.1)
+    #     if rrt.rcm(q, q_start) :
+    #         print("RCM is possible")
+    #         path2.append(q)
+    #         break
     
-    print(path2)
-    rrt.kuka_sim.performTrajectory(path2)
-    input()
+    # print(path2)
+    # rrt.kuka_sim.performTrajectory(path2)
+    # input()
 
 if __name__ == '__main__':
     main()
