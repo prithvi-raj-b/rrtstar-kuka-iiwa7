@@ -217,25 +217,29 @@ class RRTStar:
 def main():
     
     # start = np.array([1.455, -1.51, 1.25, 0, 0, 0, 0])
-    start = np.array([0.5, 1.72, 0, 0, 0, 0, 0])
+    start = np.array([0.7, 1.72, 0, 0, 0, 0, 0])
     # goal = np.array([0, 0.463, 0, -1.786, 0, 0.595, 0])
-    goal = np.array([-0.132, -0.198, 0.265, -1.19, -0.132, 1.587, 0])
+    goal = np.array([-0.132, -0.2, 0.265, -1.19, -0.132, 1.587, 0])
     # start = np.array([0, 1.72, 0,0, 0, 0, 0])
     # goal = np.array([0, 0.066, 0.2, -1.257, -0.265, 1, 0.066])
     goal_radius = 0.2
     step_size = 0.2
     max_iter = 500000
-    rewire_radius = None
+    rewire_radius = 0.2
 
     rrt = RRTStar(start, goal, goal_radius, step_size, max_iter, rewire_radius)
     print(*rrt.run())
 
     path = []
+    eff_path = []
     nint = -1
     while nint != None :
         path.append(rrt.nodes[nint].q)
+        eff_path.append(rrt.FK(rrt.nodes[nint].q)[-1])
         nint = rrt.nodes[nint].parent
     
+    eff_pathlen = np.sum(np.linalg.norm(eff_path[i] - eff_path[i+1]) for i in range(len(eff_path)-1))
+    print("End-Effector Path Length: ", eff_pathlen)
     path.reverse()
 
     # print(path, len(rrt.nodes))
