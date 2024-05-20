@@ -94,7 +94,6 @@ class RrtRcm(RrtBase):
     def put_trajectory(self):
         traj = [self.IK(node.q) for node in self.nodes]
         self.kuka_sim.performTrajectory(traj)
-        return
     
     def rcm(self,q, q_old):
         
@@ -139,10 +138,25 @@ class RrtRcm(RrtBase):
 def main():
     rcm = RrtRcm()
     rcm.do_rcm()
-    rcm.put_trajectory()
+    # rcm.put_trajectory()
+    
+    # print([np.linalg.norm(node.q[0],rcm.FK([0, 0.463, 0, -1.786, 0, 0.595, 0, 0])[-1]) for node in rcm.nodes])
+
+    ls = []
+    for node in rcm.nodes:
+        s = 0
+        for x,y in zip(node.q[0],rcm.FK([0, 0.463, 0, -1.786, 0, 0.595, 0, 0])[-1]):
+            s += x**2 + y**2
+        ls.append(np.sqrt(s))
+    print('\n',max(ls),'\n')
+    with open("rcm.txt",'a') as f:
+        f.write(str(max(ls))+'\n')
 
     # rcm.kuka_sim.performTrajectory([node.q for node in rcm.nodes])
     
 
 if __name__ == "__main__":
     main()
+
+# start [0.009667144368148826, 0.04853695552499554, -0.8674214203447641]
+# end [-0.07380120336364547, -0.06900521324995111, -0.9432854143674948]
