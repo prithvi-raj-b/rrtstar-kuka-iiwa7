@@ -9,6 +9,8 @@ In this project, we conducted a comparative study of different motion planning a
 performance of the algorithms is evaluated.
 
 A sample RCM motion is shown below, 
+
+
 ![](https://github.com/prithvi-raj-b/rrtstar-kuka-iiwa7/blob/master/RCM_gif.gif)
 
 
