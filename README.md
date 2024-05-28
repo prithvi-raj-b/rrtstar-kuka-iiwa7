@@ -14,7 +14,7 @@ A sample RCM motion is shown below,
 ![](https://github.com/prithvi-raj-b/rrtstar-kuka-iiwa7/blob/master/RCM_gif.gif)
 
 
-Download the repository and start working!, implmented algorithms may be found in the Algorithms folder, video demonstrations may be found attached to the report
+Download the repository and start working!, implemented algorithms may be found in the Algorithms folder, video demonstrations may be found attached to the report
 
 Done by:
 - Akhil Bandamidapalli (ME20B016)
