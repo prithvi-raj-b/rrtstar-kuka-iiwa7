@@ -18,6 +18,6 @@ Clone the repository and start working, implemented algorithms may be found in t
 
 Done by:
 - Akhil Bandamidapalli (ME20B016)
-- Prithviraj B (ME20B137)
+- Prithvi Raj B (ME20B137)
 
 
